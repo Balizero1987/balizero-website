@@ -1,0 +1,650 @@
+// =============================================================================
+// KBLI 2025 Data Loader & Transformer
+// Reads raw JSON, transforms to typed KBLICode objects, provides query functions.
+// Runs server-side at build time (Next.js static generation).
+// =============================================================================
+
+import { humanizeIntelBlock } from "@/lib/kbli-status-labels";
+import fs from "fs";
+import path from "path";
+import type {
+  KBLICode,
+  KBLIGoldContent,
+  KBLIRawCode,
+  KBLIRawDataFile,
+  KBLISection,
+  KBLIPmaStatus,
+  KBLILicenseByScale,
+  KBLITransition,
+  KBLITier,
+} from "./kbli-types";
+
+import { ENGLISH_TITLES } from "./kbli-english";
+import {
+  discloseBaliL4,
+  disclosePmaInfo,
+  normalizedPmaStatus,
+} from "./kbli-pma-disclosure";
+import {
+  hasCertifiedCanonicalIntel,
+  hasCertifiedMouthGold,
+  withNeutralKbliChatOpener,
+} from "./kbli-editorial-certification";
+import { ENGLISH_TITLES_GENERATED } from "./kbli-english-generated";
+import { resolveLicenseType } from "./kbli-derive";
+import { getSectionVisual } from "./kbli-cover-design";
+import { deriveProvenance } from "./kbli-provenance";
+import { riskDispute } from "./kbli-risk-dispute";
+import { perpresSlice } from "./kbli-perpres-slice";
+import { perpresCitation } from "./kbli-perpres-locator";
+import { getSectionFromCode } from "./kbli-section";
+
+// =============================================================================
+// Constants: Section metadata
+// =============================================================================
+
+/** Section display metadata */
+const SECTION_META: Record<
+  string,
+  { nameEn: string; nameId: string; icon: string; description: string }
+> = {
+  A: {
+    nameEn: "Agriculture, Forestry & Fishing",
+    nameId: "Pertanian, Kehutanan dan Perikanan",
+    icon: "🌾",
+    description: "Crop farming, livestock, forestry, and fishing activities",
+  },
+  B: {
+    nameEn: "Mining & Quarrying",
+    nameId: "Pertambangan dan Penggalian",
+    icon: "⛏️",
+    description: "Extraction of minerals, oil, gas, and quarrying",
+  },
+  C: {
+    nameEn: "Manufacturing",
+    nameId: "Industri Pengolahan",
+    icon: "🏭",
+    description: "Transformation of materials into finished goods",
+  },
+  D: {
+    nameEn: "Electricity & Gas Supply",
+    nameId: "Pengadaan Listrik dan Gas",
+    icon: "⚡",
+    description: "Generation and distribution of electricity and gas",
+  },
+  E: {
+    nameEn: "Water Supply & Waste Management",
+    nameId: "Pengadaan Air, Pengelolaan Sampah dan Daur Ulang",
+    icon: "💧",
+    description: "Water collection, treatment, and waste management",
+  },
+  F: {
+    nameEn: "Construction",
+    nameId: "Konstruksi",
+    icon: "🏗️",
+    description: "Building construction and civil engineering",
+  },
+  G: {
+    nameEn: "Wholesale & Retail Trade",
+    nameId: "Perdagangan Besar dan Eceran",
+    icon: "🛒",
+    description: "Wholesale and retail sale of goods",
+  },
+  H: {
+    nameEn: "Transportation & Storage",
+    nameId: "Transportasi dan Pergudangan",
+    icon: "🚚",
+    description: "Land, water, air transport and warehousing",
+  },
+  I: {
+    nameEn: "Accommodation & Food Service",
+    nameId: "Penyediaan Akomodasi dan Makan Minum",
+    icon: "🏨",
+    description: "Hotels, restaurants, and food service activities",
+  },
+  J: {
+    nameEn: "Information & Communication",
+    nameId: "Informasi dan Komunikasi",
+    icon: "📡",
+    description: "Publishing, broadcasting, telecommunications, and IT",
+  },
+  K: {
+    nameEn: "Financial & Insurance Activities",
+    nameId: "Aktivitas Keuangan dan Asuransi",
+    icon: "🏦",
+    description: "Banking, insurance, and financial services",
+  },
+  L: {
+    nameEn: "Real Estate Activities",
+    nameId: "Real Estat",
+    icon: "🏠",
+    description: "Buying, selling, and managing real estate",
+  },
+  M: {
+    nameEn: "Professional, Scientific & Technical",
+    nameId: "Aktivitas Profesional, Ilmiah dan Teknis",
+    icon: "🔬",
+    description: "Legal, accounting, consulting, and scientific activities",
+  },
+  N: {
+    nameEn: "Administrative & Support Services",
+    nameId: "Aktivitas Penyewaan dan Sewa Guna Usaha",
+    icon: "📋",
+    description: "Rental, employment, security, and support services",
+  },
+  O: {
+    nameEn: "Public Administration & Defence",
+    nameId: "Administrasi Pemerintahan dan Jaminan Sosial",
+    icon: "🏛️",
+    description: "Government administration and social security",
+  },
+  P: {
+    nameEn: "Education",
+    nameId: "Pendidikan",
+    icon: "🎓",
+    description: "Education at all levels and types",
+  },
+  Q: {
+    nameEn: "Human Health & Social Work",
+    nameId: "Aktivitas Kesehatan Manusia dan Aktivitas Sosial",
+    icon: "🏥",
+    description: "Healthcare, residential care, and social work",
+  },
+  R: {
+    nameEn: "Arts, Entertainment & Recreation",
+    nameId: "Kesenian, Hiburan dan Rekreasi",
+    icon: "🎭",
+    description: "Creative arts, sports, and recreation",
+  },
+  S: {
+    nameEn: "Other Service Activities",
+    nameId: "Aktivitas Jasa Lainnya",
+    icon: "🔧",
+    description: "Membership organizations, repair, and personal services",
+  },
+  T: {
+    nameEn: "Household Activities",
+    nameId: "Aktivitas Rumah Tangga",
+    icon: "🏡",
+    description: "Activities of households as employers",
+  },
+  U: {
+    nameEn: "Extraterritorial Organizations",
+    nameId: "Aktivitas Badan Internasional",
+    icon: "🌐",
+    description: "Activities of international organizations and bodies",
+  },
+  V: {
+    nameEn: "Activities Not Yet Classified",
+    nameId: "Kegiatan yang Belum Jelas Batasannya",
+    icon: "❓",
+    description: "Activities not adequately defined elsewhere",
+  },
+};
+
+// =============================================================================
+// Indonesian title case conversion
+// =============================================================================
+
+/** Indonesian prepositions/conjunctions that stay lowercase in title case */
+const ID_LOWERCASE_WORDS = new Set([
+  "dan",
+  "di",
+  "yang",
+  "untuk",
+  "dari",
+  "ke",
+  "atau",
+  "dengan",
+  "pada",
+  "oleh",
+  "dalam",
+  "atas",
+  "sebagai",
+  "serta",
+  "melalui",
+]);
+
+/**
+ * Convert an UPPERCASE Indonesian string to Title Case.
+ * Keeps Indonesian prepositions/conjunctions lowercase (except at start).
+ */
+function toTitleCase(text: string): string {
+  if (!text) return text;
+
+  return text
+    .toLowerCase()
+    .split(/\s+/)
+    .map((word, index) => {
+      if (index === 0) {
+        // Always capitalize first word
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+      if (ID_LOWERCASE_WORDS.has(word)) {
+        return word;
+      }
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(" ");
+}
+
+// =============================================================================
+// PMA status mapping
+// =============================================================================
+
+export function mapPmaStatus(raw: string): KBLIPmaStatus {
+  return normalizedPmaStatus(raw);
+}
+
+// =============================================================================
+// Keyword extraction (simple, from title and description)
+// =============================================================================
+
+/** Extract meaningful keywords from title and description */
+function extractKeywords(title: string, description: string): string[] {
+  const stopwords = new Set([
+    "yang",
+    "dan",
+    "di",
+    "dari",
+    "untuk",
+    "dengan",
+    "pada",
+    "ke",
+    "atau",
+    "ini",
+    "itu",
+    "juga",
+    "serta",
+    "tidak",
+    "dalam",
+    "oleh",
+    "atas",
+    "sebagai",
+    "melalui",
+    "adalah",
+    "akan",
+    "telah",
+    "bukan",
+    "belum",
+    "sudah",
+    "bisa",
+    "dapat",
+    "harus",
+    "perlu",
+    "kelompok",
+    "mencakup",
+    "kegiatan",
+    "termasuk",
+    "lihat",
+    "usaha",
+    "jasa",
+    "lainnya",
+    "lain",
+  ]);
+
+  const combined = `${title} ${description}`.toLowerCase();
+  const words = combined.match(/[a-zA-Z\u00C0-\u024F]+/g) ?? [];
+
+  const unique = new Set<string>();
+  for (const word of words) {
+    if (word.length >= 3 && !stopwords.has(word)) {
+      unique.add(word);
+    }
+  }
+
+  return Array.from(unique).slice(0, 20);
+}
+
+// =============================================================================
+// Tier assignment
+// =============================================================================
+
+function assignTier(code: string, goldCertified: boolean): KBLITier {
+  if (goldCertified) return "gold";
+  // Silver tier: codes with English titles available (curated or generated)
+  if (ENGLISH_TITLES[code] || ENGLISH_TITLES_GENERATED[code]) return "silver";
+  return "bronze";
+}
+
+// SEO firebreak (PR #1967): metadata (<title>/description/keywords) stayed pinned
+// to the curated-legacy English map until the GSC crawl window recovered.
+// FLIPPED 2026-07-13 (Zero GO, post-#2359 editorial launch): NEXT_PUBLIC_KBLI_META_EN=1
+// is set in Vercel Production — metadata now consumes the full-coverage titles.
+// Page BODY always uses the full map.
+const META_USES_FULL_EN = process.env.NEXT_PUBLIC_KBLI_META_EN === "1";
+
+// =============================================================================
+// Transform a single raw record
+// =============================================================================
+
+function transformRecord(
+  raw: KBLIRawCode,
+  gold: Record<string, KBLIGoldContent>,
+): KBLICode {
+  const code = raw.kode_kbli_2025;
+  const provenance = deriveProvenance(raw);
+  const section = getSectionFromCode(code);
+  const sectionMeta = section ? SECTION_META[section] : null;
+
+  const titleId = toTitleCase(raw.judul);
+  // Body display: curated wins, then generated, then Indonesian fallback.
+  const titleEnReal =
+    ENGLISH_TITLES[code] ?? ENGLISH_TITLES_GENERATED[code] ?? null;
+  const titleEn = titleEnReal ?? titleId;
+  // Metadata surface (frozen to curated-legacy until NEXT_PUBLIC_KBLI_META_EN=1).
+  const titleEnMeta = META_USES_FULL_EN
+    ? titleEn
+    : (ENGLISH_TITLES[code] ?? titleId);
+
+  const pma = disclosePmaInfo(raw, provenance, perpresCitation(code));
+  const pmaVerdictLocated = pma.verificationStatus === "located";
+  const canonicalIntelCertified = hasCertifiedCanonicalIntel(
+    code,
+    pma,
+    raw.intel_2026,
+  );
+  const goldCertified = hasCertifiedMouthGold(code, pma, gold[code]);
+
+  const licensing: KBLILicenseByScale[] = (raw.per_skala ?? []).map(
+    (entry) => ({
+      scales: entry.skala_usaha,
+      riskCategory: entry.kategori_risiko,
+      // Derive the license from the risk tier when `perizinan` is empty (Pasal 124(4)) —
+      // a flat "NIB" understated the 937 high-risk codes. Parity with the Swift app.
+      licenseType: resolveLicenseType(entry.perizinan, entry.kategori_risiko),
+      requirements: entry.persyaratan,
+      timeframe: entry.jangka_waktu,
+      obligations: entry.kewajiban,
+      authority: entry.kewenangan,
+      fictivePositive: entry.fiktif_positif,
+    }),
+  );
+
+  const transition: KBLITransition = {
+    mappingStatus: raw.status_mapping,
+    pp28LicensingSourceCodes: raw.pp28_sources ?? [],
+    kbli2020Source: raw.kbli_2020_source,
+    mappingNote: raw.mapping_note,
+    aggregationNote: raw.aggregation_note,
+    bpsCrosswalk: raw.bps_2020_ancestors
+      ? {
+          codes: raw.bps_2020_ancestors.codes ?? [],
+          adjudicationStatus:
+            raw.bps_2020_ancestors.adjudication_status ?? "mechanical-only",
+          inheritanceVerdict:
+            raw.bps_2020_ancestors.inheritance_verdict ?? "not-adjudicated",
+        }
+      : undefined,
+  };
+
+  return {
+    code,
+    titleId,
+    titleEn,
+    titleEnIsReal: titleEnReal !== null,
+    titleEnMeta,
+    description: raw.uraian,
+    section,
+    sectionName: sectionMeta?.nameEn ?? null,
+    pma,
+    licensing,
+    transition,
+    tier: assignTier(code, goldCertified),
+    keywords: extractKeywords(raw.judul, raw.uraian),
+    // Internal pipeline symbols (OK_or_HIGHER_RISK, BPS_ONLY, …) are resolved to
+    // the labels the KBLI badges use, at the loader, so no reader-facing surface
+    // can leak one by being the surface nobody remembered to wrap. Presentation
+    // only — the verdict itself is untouched. See @/lib/kbli-status-labels.
+    intel_2026: canonicalIntelCertified
+      ? humanizeIntelBlock(withNeutralKbliChatOpener(code, raw.intel_2026!))
+      : undefined,
+    // L4 — Bali sovereign-local status (national PMA openness != Bali registrability).
+    // Mirrors the transform in kbli-data.server.ts; this is the module the
+    // /kbli/[code] page actually consumes via getCode()/getAllCodes().
+    baliL4: discloseBaliL4(raw, pmaVerdictLocated),
+    provenance,
+    // Mirrors the transform in kbli-data.server.ts (W88/#9 — one fact, two
+    // readers): both must set it or the two readers disagree on the 30
+    // disputed codes exactly as the perpres-locator cross-reader test guards.
+    riskDispute: riskDispute(code) ?? undefined,
+    // Same dual-reader discipline as riskDispute above — set in BOTH
+    // transforms or the two readers disagree on the 14 slice-disclosure codes.
+    perpresSlice: perpresSlice(code) ?? undefined,
+  };
+}
+
+// =============================================================================
+// Data loading & caching
+// =============================================================================
+
+/** Module-level cache */
+let _allCodes: KBLICode[] | null = null;
+let _codeMap: Map<string, KBLICode> | null = null;
+let _sectionMap: Map<string, KBLICode[]> | null = null;
+let _prefixMap: Map<string, KBLICode[]> | null = null;
+
+/**
+ * Load and parse the KBLI JSON file.
+ * Data is cached in module-level variables after first call.
+ */
+function loadData(): void {
+  if (_allCodes !== null) return;
+
+  // Load from apps/mouth/data/ — the canonical location for Vercel deployment
+  const localPath = path.join(
+    process.cwd(),
+    "data",
+    "KBLI_2025_FINAL_CLEAN.json",
+  );
+  const fallbackPath = path.join(process.cwd(), "data", "kbli-2025.json");
+
+  let rawData: string;
+  if (fs.existsSync(localPath)) {
+    rawData = fs.readFileSync(localPath, "utf-8");
+  } else if (fs.existsSync(fallbackPath)) {
+    rawData = fs.readFileSync(fallbackPath, "utf-8");
+  } else {
+    throw new Error(
+      `KBLI data file not found. Tried:\n  ${localPath}\n  ${fallbackPath}`,
+    );
+  }
+
+  const raw: KBLIRawDataFile = JSON.parse(rawData);
+  const goldPath = path.join(process.cwd(), "data", "kbli-gold-all.json");
+  let gold: Record<string, KBLIGoldContent> = {};
+  try {
+    const parsedGold = JSON.parse(fs.readFileSync(goldPath, "utf-8"));
+    gold = parsedGold.data ?? parsedGold;
+  } catch {
+    process.stderr.write(`[kbli] Failed to load gold data from: ${goldPath}\n`);
+  }
+  const codes = raw.data.map((record) => transformRecord(record, gold));
+
+  // Build lookup maps
+  const codeMap = new Map<string, KBLICode>();
+  const sectionMap = new Map<string, KBLICode[]>();
+  const prefixMap = new Map<string, KBLICode[]>();
+
+  for (const kbli of codes) {
+    codeMap.set(kbli.code, kbli);
+
+    // Section index
+    if (kbli.section) {
+      const existing = sectionMap.get(kbli.section) ?? [];
+      existing.push(kbli);
+      sectionMap.set(kbli.section, existing);
+    }
+
+    // 3-digit prefix index (for related codes)
+    const prefix3 = kbli.code.substring(0, 3);
+    const prefixList = prefixMap.get(prefix3) ?? [];
+    prefixList.push(kbli);
+    prefixMap.set(prefix3, prefixList);
+  }
+
+  _allCodes = codes;
+  _codeMap = codeMap;
+  _sectionMap = sectionMap;
+  _prefixMap = prefixMap;
+}
+
+// =============================================================================
+// Public API
+// =============================================================================
+
+/**
+ * Get all KBLI codes as processed objects.
+ * Data is loaded and cached on first call.
+ */
+export function getAllCodes(): KBLICode[] {
+  loadData();
+  return _allCodes!;
+}
+
+/**
+ * Get a single KBLI code by its 5-digit code string.
+ * Returns undefined if not found.
+ */
+export function getCode(code: string): KBLICode | undefined {
+  loadData();
+  return _codeMap!.get(code);
+}
+
+/**
+ * Get all KBLI codes belonging to a given section letter (A-U).
+ * Returns empty array if section not found.
+ */
+export function getCodesBySection(section: string): KBLICode[] {
+  loadData();
+  return _sectionMap!.get(section.toUpperCase()) ?? [];
+}
+
+/**
+ * Get all 22 KBLI sections with metadata and code counts.
+ */
+export function getSections(): KBLISection[] {
+  loadData();
+
+  return Object.entries(SECTION_META).map(([id, meta]) => ({
+    id,
+    nameEn: meta.nameEn,
+    nameId: meta.nameId,
+    icon: meta.icon,
+    codeCount: _sectionMap!.get(id)?.length ?? 0,
+    description: meta.description,
+  }));
+}
+
+/**
+ * Walk a code list outward from the target's position, alternating
+ * after/before, feeding each candidate to `push` until it reports full.
+ * Deterministic for a given dataset order.
+ */
+function pickNeighbors(
+  list: KBLICode[],
+  code: string,
+  push: (item: KBLICode) => boolean,
+): void {
+  if (list.length === 0) return;
+
+  const found = list.findIndex((c) => c.code === code);
+  let lo: number;
+  let hi: number;
+  if (found >= 0) {
+    lo = found - 1;
+    hi = found + 1;
+  } else {
+    // Target absent from this list: anchor to where it would sit by code
+    // order so the window stays deterministic.
+    let insertion = list.findIndex((c) => c.code > code);
+    if (insertion === -1) insertion = list.length;
+    lo = insertion - 1;
+    hi = insertion;
+  }
+  let wantMore = true;
+  while (wantMore && (lo >= 0 || hi < list.length)) {
+    if (hi < list.length) {
+      wantMore = push(list[hi]);
+      hi += 1;
+    }
+    if (wantMore && lo >= 0) {
+      wantMore = push(list[lo]);
+      lo -= 1;
+    }
+  }
+}
+
+/**
+ * Find related KBLI codes for a given code.
+ * Strategy: same 3-digit prefix first, then same section, excluding self —
+ * in both phases picking the NEIGHBORS of the target rather than the head
+ * of the list. The previous head-of-list fill gave a handful of head codes
+ * every inbound link while long-tail codes got none; a crawl-starved
+ * cluster needs inbound links distributed across all 1,559 pages
+ * (GSC clean-window investigation 2026-07-03).
+ * Returns up to `limit` results (default 6).
+ */
+export function getRelatedCodes(code: string, limit: number = 6): KBLICode[] {
+  loadData();
+
+  const target = _codeMap!.get(code);
+  if (!target) return [];
+
+  const result: KBLICode[] = [];
+  const seen = new Set<string>([code]);
+  const push = (item: KBLICode): boolean => {
+    if (result.length < limit && !seen.has(item.code)) {
+      result.push(item);
+      seen.add(item.code);
+    }
+    return result.length < limit;
+  };
+
+  // Phase 1: Same 3-digit prefix (most closely related)
+  pickNeighbors(_prefixMap!.get(code.substring(0, 3)) ?? [], code, push);
+
+  // Phase 2: Same section (broader relation)
+  if (result.length < limit && target.section) {
+    pickNeighbors(_sectionMap!.get(target.section) ?? [], code, push);
+  }
+
+  return result;
+}
+
+/**
+ * Get section metadata for a given section letter.
+ */
+export function getSectionMeta(sectionId: string): {
+  nameEn: string;
+  nameId: string;
+  icon: string;
+  description: string;
+} | null {
+  return SECTION_META[sectionId.toUpperCase()] ?? null;
+}
+
+// =============================================================================
+// Hero gradient — unique per sector, deterministic, editorial (no photo hotlink)
+// =============================================================================
+//
+// Superseded 2026-07-07: the old SECTOR_HERO map (Unsplash-era, saturated/neon
+// per-sector gradients, only 14 of 22 sections covered) is replaced by the
+// kbli-cover-design.ts design DNA — the same muted, dark-editorial palette
+// that drives the OG cover generator and KBLIHeroCanvas, now covering all
+// 22 sections (A-U + V). Signature kept identical ({gradient, pattern}) so
+// existing call sites (src/app/kbli/[code]/page.tsx) keep compiling unchanged.
+
+export function getHeroStyle(section: string | null): {
+  gradient: string;
+  pattern: string;
+} {
+  const visual = getSectionVisual(section);
+  return {
+    // NOTE: callers (src/app/kbli/[code]/page.tsx) wrap this in
+    // `linear-gradient(${gradient})` themselves — return the args, not a
+    // pre-wrapped CSS value.
+    gradient: `135deg, ${visual.hueA} 0%, ${visual.hueB} 100%`,
+    pattern: `radial-gradient(circle at 70% 70%, ${visual.accent}22 0%, transparent 50%)`,
+  };
+}

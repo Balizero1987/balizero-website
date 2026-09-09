@@ -1,0 +1,403 @@
+{
+  "common": {
+    "nav": {
+      "news": "News",
+      "services": "Services",
+      "team": "Team",
+      "contact": "Contact",
+      "language": "Language"
+    },
+    "footer": {
+      "description": "Your trusted partner for business, immigration, and life in Indonesia. Expert guidance for every step of your journey.",
+      "copyright": "Bali Zero. All rights reserved.",
+      "services": "Services",
+      "news": "News",
+      "contact": "Contact"
+    },
+    "cta": {
+      "contactUs": "Contact Us",
+      "viewServices": "View Services",
+      "whatsappUs": "WhatsApp Us",
+      "askZantaraAi": "Ask Zantara AI",
+      "askNow": "Ask Now",
+      "sendMessage": "Send Message via WhatsApp",
+      "sending": "Sending...",
+      "sendAnother": "Send another message",
+      "readMore": "Read more",
+      "viewDetails": "View details & pricing",
+      "viewFullTeam": "View full team",
+      "learnMore": "Learn more"
+    },
+    "error": "Something went wrong. Please refresh the page.",
+    "consent": {
+      "text": "We use session data to provide visa guidance. By continuing, you agree to our",
+      "privacyPolicy": "Privacy Policy",
+      "and": "and",
+      "termsOfService": "Terms of Service",
+      "dismiss": "Got it"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Decode Indonesia.",
+      "titleAccent": "Thrive",
+      "titleSuffix": "here",
+      "subtitle": "Legal, immigration, fiscal & business intelligence for Indonesia.",
+      "subtitleAccent": "Forged by Zantara AI."
+    },
+    "newsletter": {
+      "title": "Subscribe to the latest Indonesia Insights",
+      "subtitle": "Expert analysis delivered to your inbox",
+      "placeholder": "Email address",
+      "orContinueWith": "Or continue with"
+    },
+    "topics": {
+      "title": "Topics",
+      "immigration": "Immigration",
+      "business": "Business",
+      "taxLegal": "Tax & Legal",
+      "property": "Property",
+      "lifestyle": "Lifestyle"
+    },
+    "kbli": {
+      "sectionTitle": "KBLI Navigator",
+      "sectionSubtitle": "Find and explore Indonesian business classification codes"
+    },
+    "insights": {
+      "latestTitle": "Latest Insights",
+      "featuredTitle": "Featured"
+    },
+    "zantaraAi": {
+      "title": "Zantara AI",
+      "role": "AI Bridge",
+      "description": "Your 24/7 intelligent assistant. Zantara AI helps you get instant answers about visas, company setup, taxes, and more — bridging you to the right expert when you need human support.",
+      "shortDescription": "Your 24/7 intelligent assistant"
+    },
+    "categories": {
+      "immigration": "Immigration",
+      "business": "Business",
+      "taxLegal": "Tax & Legal",
+      "property": "Property",
+      "lifestyle": "Lifestyle"
+    }
+  },
+  "contact": {
+    "hero": {
+      "label": "Contact Us",
+      "title": "Let's Start Your",
+      "titleAccent": "Indonesian Journey",
+      "subtitle": "Have questions about visas, company setup, or taxes? We're here to help. Get in touch and we'll respond within 24 hours."
+    },
+    "info": {
+      "getInTouch": "Get in Touch",
+      "whatsapp": "WhatsApp",
+      "whatsappDesc": "Fastest response - usually within minutes",
+      "email": "Email",
+      "emailDesc": "For detailed inquiries and documents",
+      "instagram": "Instagram",
+      "instagramDesc": "Follow us for updates and tips",
+      "officeLocation": "Office Location",
+      "officeDesc": "By appointment only",
+      "officeAddress": "Kerobokan, Bali",
+      "officeNote": "Exact location shared upon appointment"
+    },
+    "hours": {
+      "title": "Office Hours",
+      "monFri": "Monday - Friday",
+      "monFriHours": "9:00 AM - 5:00 PM",
+      "saturday": "Saturday",
+      "saturdayHours": "10:00 AM - 2:00 PM",
+      "sunday": "Sunday",
+      "sundayClosed": "Closed",
+      "timezone": "Timezone: WITA (Bali Time, UTC+8)"
+    },
+    "form": {
+      "title": "Send Us a Message",
+      "fullName": "Full Name",
+      "emailAddress": "Email Address",
+      "phone": "Phone Number",
+      "service": "Service Interested In",
+      "servicePlaceholder": "Select a service...",
+      "serviceVisa": "Visa Services",
+      "serviceCompany": "Company Setup",
+      "serviceTax": "Tax Consulting",
+      "serviceRealEstate": "Real Estate",
+      "serviceMultiple": "Multiple Services",
+      "serviceOther": "Other",
+      "message": "Message",
+      "messagePlaceholder": "Tell us about your needs...",
+      "responseTime": "We'll respond within 24 hours"
+    },
+    "success": {
+      "title": "Message Sent!",
+      "description": "We've opened WhatsApp with your message. If it didn't open, please contact us directly."
+    },
+    "aiCta": {
+      "title": "Need Instant Answers?",
+      "description": "Get immediate help with visas, company setup, taxes, and more from our AI assistant. Available 24/7 with instant responses.",
+      "button": "Ask Zantara AI Now"
+    }
+  },
+  "team": {
+    "hero": {
+      "label": "Our Team",
+      "title": "Meet the",
+      "titleAccent": "Experts",
+      "titleSuffix": "Behind Your Success",
+      "subtitle": "A dedicated team of visa specialists, tax consultants, and business advisors committed to making your Indonesian journey seamless."
+    },
+    "sections": {
+      "leadership": "Leadership",
+      "leadershipDesc": "Guiding our vision and ensuring excellence in every service we provide.",
+      "setupTeam": "Setup Team",
+      "setupTeamDesc": "Company formation, visa processing, and business consulting experts.",
+      "taxDepartment": "Tax Department",
+      "taxDepartmentDesc": "Certified tax professionals ensuring your compliance and optimization.",
+      "accounting": "Accounting",
+      "accountingDesc": "Managing financial operations with precision and reliability.",
+      "supportMarketing": "Support & Marketing",
+      "supportMarketingDesc": "Keeping you connected and informed throughout your journey.",
+      "external": "(External)"
+    },
+    "ai": {
+      "title": "Zantara AI",
+      "role": "AI Bridge",
+      "description": "Your 24/7 intelligent assistant. Zantara AI helps you get instant answers about visas, company setup, taxes, and more — bridging you to the right expert when you need human support."
+    },
+    "cta": {
+      "title": "Ready to Work With Us?",
+      "description": "Get in touch with our team for a free consultation. We're here to help you navigate Indonesia with confidence."
+    }
+  },
+  "services": {
+    "hero": {
+      "label": "Our Services",
+      "title": "Build Your",
+      "titleAccent": "Indonesian Dream",
+      "titleSuffix": "with Confidence",
+      "subtitle": "From Zero to Infinity. We handle visas, company setup, taxes, and property — so you can focus on what matters most."
+    },
+    "reviews": {
+      "reviewCount": "700+ reviews",
+      "onGoogleMaps": "on Google Maps"
+    },
+    "grid": {
+      "title": "Our Services & Pricing",
+      "subtitle": "Transparent pricing with no hidden fees. All prices in IDR.",
+      "startingFrom": "Starting from",
+      "contactForQuote": "Contact for quote"
+    },
+    "process": {
+      "title": "How It Works",
+      "subtitle": "Simple, transparent, professional",
+      "step1Title": "Consultation",
+      "step1Desc": "Free initial call to understand your needs",
+      "step2Title": "Proposal",
+      "step2Desc": "Clear timeline and transparent pricing",
+      "step3Title": "Execution",
+      "step3Desc": "We handle all paperwork and processes",
+      "step4Title": "Delivery",
+      "step4Desc": "Receive your documents and ongoing support"
+    },
+    "teamSection": {
+      "title": "Meet Our Team",
+      "subtitle": "A dedicated team of visa specialists, tax consultants, and business advisors."
+    },
+    "cta": {
+      "title": "Ready to Start?",
+      "subtitle": "Get a free consultation with our experts. We'll guide you through the process and give you a clear timeline and quote."
+    },
+    "contactInfo": {
+      "office": "Office",
+      "hours": "Hours",
+      "hoursValue": "Mon-Fri 9am-6pm",
+      "response": "Response",
+      "responseValue": "Within 24 hours",
+      "languages": "Languages",
+      "languagesValue": "EN, ID, IT"
+    },
+    "serviceNames": {
+      "visa": "Visa & Immigration",
+      "company": "Company Setup & Licenses",
+      "tax": "Tax Consulting",
+      "property": "Real Estate Services"
+    },
+    "serviceTaglines": {
+      "visa": "Complete visa solutions for living and working in Indonesia",
+      "company": "From licenses to structure — launch your business fast",
+      "tax": "Navigate Indonesia's tax system with confidence",
+      "property": "Secure property with legal clarity and guidance"
+    }
+  },
+  "news": {
+    "allNews": "All News",
+    "latestInsights": "Latest Insights",
+    "featured": "Featured",
+    "readMore": "Read more",
+    "minuteRead": "min read",
+    "categories": {
+      "immigration": "Immigration",
+      "business": "Business",
+      "taxLegal": "Tax & Legal",
+      "property": "Property",
+      "lifestyle": "Lifestyle",
+      "tech": "Tech",
+      "baliNews": "Bali News",
+      "visas": "Visas & Immigration",
+      "taxes": "Taxes & Compliance",
+      "living": "Living in Indonesia",
+      "trends": "Trends & Insights"
+    },
+    "categoryDescriptions": {
+      "immigration": "Visas, permits, and everything you need to know about relocating to Indonesia.",
+      "business": "Company setup, licensing, KBLI codes, and doing business in Indonesia.",
+      "taxLegal": "Tax obligations, legal compliance, and regulatory updates.",
+      "property": "Real estate, property ownership, and investment opportunities in Bali.",
+      "lifestyle": "Living in Bali, culture, community, and quality of life.",
+      "tech": "Digital nomad life, tech industry, and remote work in Indonesia.",
+      "baliNews": "Breaking news, culture, events, and stories from Bali and Indonesia.",
+      "visas": "Visas, permits, and everything you need to know about relocating to Indonesia.",
+      "taxes": "Tax obligations, legal compliance, and regulatory updates.",
+      "living": "Living in Bali, culture, community, driving, healthcare, and daily life.",
+      "trends": "Digital economy, tech industry, emerging regulations, and market insights."
+    }
+  },
+  "portal": {
+    "login": {
+      "forgot_password": "Forgot PIN?",
+      "errors": {
+        "invalid_credentials": "Wrong email or PIN. Please try again.",
+        "account_locked": "Account locked for security. Contact team@balizero.com.",
+        "portal_unavailable": "Portal access is not available for this account. Contact team@balizero.com.",
+        "rate_limited": "Too many attempts. Retry in {{seconds}} seconds.",
+        "invalid_2fa": "Invalid 2FA code.",
+        "network_error": "Connection lost. Check your network and retry.",
+        "email_not_found": "Email not found.",
+        "server_error": "Server error. Retry in a few minutes.",
+        "maintenance": "Maintenance in progress. Please return later."
+      }
+    },
+    "forgot_password": {
+      "title": "Recover access",
+      "instructions": "Contact our team to recover access. No request has been sent yet."
+    }
+  },
+  "book": {
+    "stats": {
+      "clientsServed": "Clients served",
+      "yearsOfHistory": "Years of history",
+      "kbliNavigatorCodes": "KBLI Navigator codes",
+      "aiChannelsActive": "AI channels active"
+    }
+  },
+  "chat": {
+    "status": {
+      "initializing": "Initializing..."
+    },
+    "errors": {
+      "network": "Network error"
+    }
+  },
+  "secondHome": {
+    "hero": {
+      "eyebrow": "E33 — Second Home Visa",
+      "title": "Live in Indonesia for up to 5 years — on your own funds",
+      "subtitle": "The Second Home Visa is a long-term residence permit for financially established applicants. No sponsor, no employer — your own financial commitment is the basis. Start with a free fit memo.",
+      "stat1v": "5 years",
+      "stat1l": "First grant, renewable",
+      "stat2v": "USD 130,000",
+      "stat2l": "Own-name BUMN deposit",
+      "stat3v": "Free",
+      "stat3l": "Fit memo assessment"
+    },
+    "routes": {
+      "eyebrow": "Qualifying",
+      "title": "Two ways to qualify",
+      "a": {
+        "title": "Route A — Bank deposit",
+        "amount": "USD 130,000",
+        "body": "A deposit in your own name at a state-owned (BUMN) Indonesian bank. The funds stay yours — the deposit is the evidence of financial commitment.",
+        "note": "We prepare the evidence file in the format imigrasi expects, and coordinate the bank confirmation with you."
+      },
+      "b": {
+        "title": "Route B — Property",
+        "amount": "USD 1,000,000",
+        "body": "A completed strata unit (rumah susun or apartment) worth at least USD 1,000,000.",
+        "note": "Completed strata-title only — off-plan purchases and leasehold do not qualify."
+      }
+    },
+    "who": {
+      "eyebrow": "Who it's for",
+      "title": "Three tracks, one residence",
+      "base": {
+        "title": "E33 — Base (up to 5 years)",
+        "body": "For financially established individuals and families. First grant up to 5 years, renewable — up to 10 years of cumulative stay."
+      },
+      "e33e": {
+        "title": "E33E — Senior, 5 years",
+        "body": "Age 55+. USD 50,000 deposit at a state-owned bank plus USD 3,000/month income. Five-year validity."
+      },
+      "e33f": {
+        "title": "E33F — Senior, 1 year",
+        "body": "Age 55+. USD 3,000/month income only — no deposit required. One-year validity."
+      },
+      "family": {
+        "title": "Bringing family",
+        "body": "A family add-on is available: eligible family members can join through dependent routes. We confirm the current dependent rules and costs in your fit memo."
+      },
+      "nowork": {
+        "title": "No work rights",
+        "body": "The E33 is a residence permit — it does not authorize employment in Indonesia. Paid work requires a separate work permit/KITAS."
+      },
+      "ageNote": "Senior age threshold: we operate on 55+ per Permenkumham 11/2024 and the live imigrasi guidance. One provision of the regulation still reads 60 — for ages 55–59 we confirm eligibility individually before filing."
+    },
+    "how": {
+      "eyebrow": "How it works",
+      "title": "What Bali Zero does",
+      "step1": {
+        "label": "Step 1 — Free",
+        "title": "Fit memo",
+        "body": "Message us on WhatsApp. We assess which route and track actually fits your situation — free, no obligation."
+      },
+      "step2": {
+        "label": "Step 2",
+        "title": "Evidence review",
+        "body": "We review your deposit or property evidence against what imigrasi actually asks for — before anything is filed."
+      },
+      "step3": {
+        "label": "Step 3",
+        "title": "Filing",
+        "body": "We prepare and file the application, coordinate with imigrasi, and track it through to the grant."
+      },
+      "priceLabel": "Base E33 — all-inclusive",
+      "priceNote": "One figure, everything included. Senior tracks and family add-ons are priced in your free fit memo."
+    },
+    "duty": {
+      "eyebrow": "After the grant",
+      "title": "The 90-day evidence duty",
+      "body": "Once your permit is granted, you have 90 days to evidence that the commitment is real: the deposit placed in your own name, or the qualifying property secured. We track this deadline with you from day one, so the permit stays clean."
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "title": "Frequently asked questions",
+      "q1": "What is the E33 Second Home Visa for Indonesia?",
+      "a1": "The E33 Second Home Visa is a long-term residence permit for financially established applicants. The first grant is up to 5 years and it is renewable, with a 10-year cumulative cap. It is a pure residence permit and does not authorize employment in Indonesia.",
+      "q2": "How do I qualify for the Second Home Visa?",
+      "a2": "Two qualifying routes: a USD 130,000 deposit in your own name at a state-owned (BUMN) Indonesian bank, or a USD 1,000,000 completed strata unit (rumah susun or apartment). Off-plan and leasehold property do not qualify.",
+      "q3": "Can I work in Indonesia on a Second Home Visa?",
+      "a3": "No. The E33 is a residence permit only — it does not authorize employment. Paid work in Indonesia requires a separate work permit/KITAS.",
+      "q4": "Is there a senior option for the Second Home Visa?",
+      "a4": "Yes. E33E (age 55+, 5 years) requires a USD 50,000 deposit at a state-owned bank plus USD 3,000/month income. E33F (age 55+, 1 year) requires USD 3,000/month income only, with no deposit.",
+      "q5": "Can my family join me on a Second Home Visa?",
+      "a5": "A family add-on is available — eligible family members can join through dependent routes. The current dependent rules and costs are confirmed individually during the free fit memo.",
+      "q6": "How much does the Second Home Visa cost with Bali Zero?",
+      "a6": "{{price}} all-inclusive for the base E33 — one figure, everything included. The fit memo that assesses your route is free."
+    },
+    "cta": {
+      "fitCheck": "Start the fit-check",
+      "title": "Start with a free fit memo",
+      "body": "Tell us your situation on WhatsApp. We reply with an honest read: which route fits, what evidence you'll need, and the exact price for your case. No obligation.",
+      "button": "Get my free Fit Memo →"
+    }
+  }
+}
