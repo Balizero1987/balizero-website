@@ -25,7 +25,9 @@ describe("client portal introduction", () => {
       expect(terms[index]).toHaveTextContent(title);
       expect(definitions[index]).toHaveTextContent(detail);
     }
-    expect(within(portal).getByText(/depend on your account and permissions/)).toBeVisible();
+    expect(
+      within(portal).getByText(/depend on your account and permissions/),
+    ).toBeVisible();
     expect(within(portal).queryByRole("tab")).not.toBeInTheDocument();
     expect(within(portal).queryByRole("tabpanel")).not.toBeInTheDocument();
   });
@@ -68,7 +70,7 @@ describe("editorial carousel", () => {
     expect(feature).not.toHaveTextContent(/min read/);
     expect(
       screen.getByRole("link", { name: /Explore the Journal/ }),
-    ).toHaveAttribute("href", "/journal");
+    ).toHaveAttribute("href", "/news");
     expect(feature).toHaveTextContent("02 / 02");
     feature.focus();
     await user.keyboard("{ArrowRight}");

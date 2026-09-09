@@ -49,7 +49,7 @@ const SCENARIO_TRIGGER_STYLES = `
       transparent
     );
     box-shadow: inset 0 0 0 1px currentColor;
-    
+
     color: var(--accent-funnel);
     text-decoration-line: underline;
     text-decoration-thickness: 2px;

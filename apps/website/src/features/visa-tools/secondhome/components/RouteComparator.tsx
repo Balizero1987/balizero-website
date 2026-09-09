@@ -156,7 +156,7 @@ export function RouteComparator({ highlight = false }: RouteComparatorProps) {
 
       <style>{`
         .bz-shs-route-comparator {
-          
+
           --route-copy: #1D2C3B;
           --route-label: #4f5f67;
         }
@@ -256,21 +256,21 @@ export function RouteComparator({ highlight = false }: RouteComparatorProps) {
 
         .bz-shs-route-table-view [data-route="deposit"],
         .bz-shs-route-card[data-route="deposit"] {
-          
+
           --route-accent: #233D52;
           --route-tint: #e8eef2;
         }
 
         .bz-shs-route-table-view [data-route="property"],
         .bz-shs-route-card[data-route="property"] {
-          
+
           --route-accent: #775517;
           --route-tint: #f8f2eb;
         }
 
         .bz-shs-route-table-view [data-route="senior"],
         .bz-shs-route-card[data-route="senior"] {
-          
+
           --route-accent: #66517a;
           --route-tint: #f2eef5;
         }
@@ -280,7 +280,7 @@ export function RouteComparator({ highlight = false }: RouteComparatorProps) {
           align-items: center;
           gap: var(--space-2, 0.5rem);
           min-width: 0;
-          
+
           font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
           font-size: 1rem;
           font-weight: 600;

@@ -180,7 +180,7 @@ export function QuestionCard({
         .bz-shs-why[open] > .bz-shs-why-summary .bz-shs-why-chevron {
           transform: rotate(90deg);
         }
-        
+
         .bz-shs-option {
           border: 1px solid var(--border-strong);
           background: transparent;
@@ -194,7 +194,7 @@ export function QuestionCard({
           border-color: var(--accent-funnel);
           background: color-mix(in srgb, var(--accent-funnel) 6%, transparent);
         }
-        
+
         .bz-shs-option[data-selected="true"] {
           border-color: var(--text-primary);
           background: color-mix(in srgb, var(--text-primary) 6%, transparent);

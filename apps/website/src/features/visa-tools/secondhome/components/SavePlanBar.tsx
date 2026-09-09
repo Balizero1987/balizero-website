@@ -16,7 +16,7 @@ const PRINT_STYLES = `
   }
 
   @media print {
-    
+
     :root,
     [data-theme],
     [data-funnel="visa"] {
@@ -28,7 +28,7 @@ const PRINT_STYLES = `
     html,
     body,
     [data-funnel="visa"] {
-      
+
       background: #ffffff !important;
       color: #1D2C3B !important;
     }
@@ -130,7 +130,7 @@ const CLEAR_BUTTON_STYLES = `
   }
 
   .bz-shs-clear-plan:is(:hover, :focus-visible) {
-    
+
     border-color: var(--color-error, #a83a44);
     background: color-mix(
       in srgb,

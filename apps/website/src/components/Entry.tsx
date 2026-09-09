@@ -7,7 +7,7 @@ import "./entry.css";
 const navigation = [
   { label: "Explore", href: "/#tools" },
   { label: "Services", href: "/services" },
-  { label: "Journal", href: "/journal" },
+  { label: "Journal", href: "/news" },
   { label: "Our story", href: "/about" },
   { label: "Our team", href: "/team" },
   { label: "Contact", href: "/contact" },
@@ -128,9 +128,7 @@ export function Hero() {
           </ul>
         </div>
       </div>
-      <span className="hero-caption">
-        TRADITION, TOMORROW
-      </span>
+      <span className="hero-caption">TRADITION, TOMORROW</span>
     </section>
   );
 }

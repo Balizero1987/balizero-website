@@ -731,7 +731,7 @@ export function StudioApp() {
           .bz-shs-layout {
             grid-template-columns: minmax(0, 1fr) 320px;
           }
-          
+
           .bz-shs-layout > aside {
             position: sticky;
             top: var(--space-5, 2rem);
